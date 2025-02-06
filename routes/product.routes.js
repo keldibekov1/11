@@ -8,11 +8,16 @@ import {
   deleteProduct,
 } from "../controllers/product.controller.js";
 
+import passedRole from "../middleware/rolePolice.js";
+import selfPolice from "../middleware/selfPolice.js";
+import verifyToken from "../middleware/verifyToken.js";
+
+
 const router = Router();
 
 /**
  * @swagger
- * /products:
+ * /api/products:
  *   post:
  *     summary: Create a new product
  *     description: Add a new product with an image to the catalog.
@@ -20,11 +25,11 @@ const router = Router();
  *       201:
  *         description: Product created successfully
  */
-router.post("/", multer.single("image"), createProduct); // "image" nomli faylni yuklaymiz
+router.post("/",selfPolice,passedRole,verifyToken, multer.single("image"), createProduct); // "image" nomli faylni yuklaymiz
 
 /**
  * @swagger
- * /products:
+ * /api/products:
  *   get:
  *     summary: Get all products
  *     description: Retrieve all products in the catalog.
@@ -36,7 +41,7 @@ router.get("/", getAllProducts);
 
 /**
  * @swagger
- * /products/{id}:
+ * /api/products/{id}:
  *   get:
  *     summary: Get a product by ID
  *     description: Retrieve a specific product by its ID.
@@ -57,7 +62,7 @@ router.get("/:id", getProductById);
 
 /**
  * @swagger
- * /products/{id}:
+ * /api/products/{id}:
  *   patch:
  *     summary: Update a product
  *     description: Update the details of a specific product.
@@ -74,11 +79,11 @@ router.get("/:id", getProductById);
  *       404:
  *         description: Product not found
  */
-router.patch("/:id", updateProduct);
+router.patch("/:id",selfPolice,passedRole,verifyToken, updateProduct);
 
 /**
  * @swagger
- * /products/{id}:
+ * /api/products/{id}:
  *   delete:
  *     summary: Delete a product
  *     description: Delete a specific product from the catalog.
@@ -95,6 +100,6 @@ router.patch("/:id", updateProduct);
  *       404:
  *         description: Product not found
  */
-router.delete("/:id", deleteProduct);
+router.delete("/:id",selfPolice,passedRole,verifyToken, deleteProduct);
 
 export default router;

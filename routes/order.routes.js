@@ -1,11 +1,15 @@
 import express from "express";
 import { createOrder, getAllOrders, getOrderById, updateOrder, deleteOrder } from '../controllers/order.controller.js';
+import passedRole from "../middleware/rolePolice.js";
+import selfPolice from "../middleware/selfPolice.js";
+import verifyToken from "../middleware/verifyToken.js";
+
 
 const router = express.Router();
 
 /**
  * @swagger
- * /orders:
+ * /api/orders:
  *   post:
  *     summary: Create a new order
  *     description: Create a new order in the system.
@@ -13,11 +17,11 @@ const router = express.Router();
  *       201:
  *         description: Order created successfully
  */
-router.post("/", createOrder);
+router.post("/",selfPolice,passedRole,verifyToken, createOrder);
 
 /**
  * @swagger
- * /orders:
+ * /api/orders:
  *   get:
  *     summary: Get all orders
  *     description: Retrieve all orders in the system.
@@ -29,7 +33,7 @@ router.get("/", getAllOrders);
 
 /**
  * @swagger
- * /orders/{id}:
+ * /api/orders/{id}:
  *   get:
  *     summary: Get an order by ID
  *     description: Retrieve a specific order by its ID.
@@ -50,7 +54,7 @@ router.get("/:id", getOrderById);
 
 /**
  * @swagger
- * /orders/{id}:
+ * /api/orders/{id}:
  *   patch:
  *     summary: Update an order
  *     description: Update the details of an existing order.
@@ -67,11 +71,11 @@ router.get("/:id", getOrderById);
  *       404:
  *         description: Order not found
  */
-router.patch("/:id", updateOrder);
+router.patch("/:id",selfPolice,passedRole,verifyToken, updateOrder);
 
 /**
  * @swagger
- * /orders/{id}:
+ * /api/orders/{id}:
  *   delete:
  *     summary: Delete an order
  *     description: Delete an order from the system.
@@ -88,6 +92,6 @@ router.patch("/:id", updateOrder);
  *       404:
  *         description: Order not found
  */
-router.delete("/:id", deleteOrder);
+router.delete("/:id",selfPolice,passedRole,verifyToken, deleteOrder);
 
 export default router;

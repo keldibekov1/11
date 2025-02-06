@@ -10,7 +10,7 @@ const userRoute = Router();
 
 /**
  * @swagger
- * /users/register:
+ * /api/users/register:
  *   post:
  *     summary: "Foydalanuvchini ro‘yxatdan o‘tkazish"
  *     tags:
@@ -41,7 +41,7 @@ userRoute.post("/register", register);
 
 /**
  * @swagger
- * /users/login:
+ * /api/users/login:
  *   post:
  *     summary: "Foydalanuvchini tizimga kiritish"
  *     tags:

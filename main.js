@@ -28,7 +28,7 @@ app.use("/api", orderItemRoutes)
 app.use("/api", productRoute);
 app.use("/api", userRoute);
 app.use("/api",router)
-app.use("/api", CategoryRoute)
+app.use("/api" ,CategoryRoute)
 
 app.listen(port, () => console.log("server started on port", port));
 

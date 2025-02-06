@@ -3,11 +3,15 @@
     import swaggerJsDoc from "swagger-jsdoc";
     import swaggerUi from "swagger-ui-express";
 
+    import passedRole from "../middleware/rolePolice.js";
+    import selfPolice from "../middleware/selfPolice.js";
+    import verifyToken from "../middleware/verifyToken.js";
+
     let BrandsRoute = Router();
 
     /**
      * @swagger
-     * /brands/all:
+     * /api/brands/all:
      *   get:
      *     summary: Barcha brendlarni olish
      *     responses:
@@ -18,7 +22,7 @@
 
     /**
      * @swagger
-     * /brands/{id}:
+     * /api/brands/{id}:
      *   get:
      *     summary: Bitta brendni olish
      *     parameters:
@@ -35,18 +39,18 @@
 
     /**
      * @swagger
-     * /brands/create:
+     * /api/brands/create:
      *   post:
      *     summary: Yangi brend yaratish
      *     responses:
      *       201:
      *         description: Yangi brend yaratildi
      */
-    BrandsRoute.post("/brands/create", Create);
+    BrandsRoute.post("/brands/create",selfPolice,passedRole,verifyToken, Create);
 
     /**
      * @swagger
-     * /brands/{id}:
+     * /api/brands/{id}:
      *   patch:
      *     summary: Brend ma'lumotlarini yangilash
      *     parameters:
@@ -59,11 +63,11 @@
      *       200:
      *         description: Brend yangilandi
      */
-    BrandsRoute.patch("/brands/:id", Update);
+    BrandsRoute.patch("/brands/:id",selfPolice,passedRole,verifyToken, Update);
 
     /**
      * @swagger
-     * /brands/{id}:
+     * /api/brands/{id}:
      *   delete:
      *     summary: Brendni o'chirish
      *     parameters:
@@ -76,6 +80,6 @@
      *       200:
      *         description: Brend o'chirildi
      */
-    BrandsRoute.delete("/brands/:id", Delete);
+    BrandsRoute.delete("/brands/:id",selfPolice,passedRole,verifyToken, Delete);
 
     export default BrandsRoute;

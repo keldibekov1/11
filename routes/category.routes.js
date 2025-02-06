@@ -3,6 +3,11 @@ import { Create, Delete, FindAll, FindOne, Update } from "../controllers/categor
 import swaggerJsDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 
+import passedRole from "../middleware/rolePolice.js";
+import selfPolice from "../middleware/selfPolice.js";
+import verifyToken from "../middleware/verifyToken.js";
+
+
 let CategoryRoute = Router();
 
 /**
@@ -18,7 +23,7 @@ CategoryRoute.get("/category/all", FindAll);
 
 /**
  * @swagger
- * /category/{id}:
+ * /api/category/{id}:
  *   get:
  *     summary: Bitta kategoriyani olish
  *     parameters:
@@ -35,7 +40,7 @@ CategoryRoute.get("/category/:id", FindOne);
 
 /**
  * @swagger
- * /category/{id}:
+ * /api/category/{id}:
  *   post:
  *     summary: Yangi kategoriya yaratish
  *     parameters:
@@ -48,7 +53,7 @@ CategoryRoute.get("/category/:id", FindOne);
  *       201:
  *         description: Yangi kategoriya yaratildi
  */
-CategoryRoute.post("/category", Create);
+CategoryRoute.post("/category",selfPolice,passedRole,verifyToken, Create);
 
 /**
  * @swagger
@@ -65,11 +70,11 @@ CategoryRoute.post("/category", Create);
  *       200:
  *         description: Kategoriya yangilandi
  */
-CategoryRoute.patch("/category/:id", Update);
+CategoryRoute.patch("/category/:id",selfPolice,passedRole,verifyToken, Update);
 
 /**
  * @swagger
- * /category/{id}:
+ * /api/category/{id}:
  *   delete:
  *     summary: Kategoriya o'chirish
  *     parameters:
@@ -82,6 +87,6 @@ CategoryRoute.patch("/category/:id", Update);
  *       200:
  *         description: Kategoriya o'chirildi
  */
-CategoryRoute.delete("/category/:id", Delete);
+CategoryRoute.delete("/category/:id",selfPolice,passedRole,verifyToken, Delete);
 
 export default CategoryRoute;
