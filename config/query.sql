@@ -22,7 +22,7 @@ CREATE Table category (
 CREATE Table category_item (
     id INT AUTO_INCREMENT PRIMARY KEY,
     category_id INT,
-    Foreign Key (category_id) REFERENCES category(id)
+    Foreign Key (category_id) REFERENCES category(id),
     product_id INT,
     Foreign Key (product_id) REFERENCES product(id)
 );
@@ -44,10 +44,10 @@ CREATE Table country (
 
 
 
-CREATE Table oder (
+CREATE Table `order` (
   id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INTEGER,
-  total_price INTEGER,
+  total_price INTEGER
 )
 
 CREATE TABLE orderItem (

@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { Create, Delete, FindAll, FindOne, Update } from "../controllers/category.item.controller.js";
+import passedRole from "../middleware/rolePolice.js"
 import swaggerJsDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 
@@ -42,7 +43,7 @@ CategoryItemRoute.get("/category_item/:id", FindOne);
  *       201:
  *         description: Yangi kategoriya elementi yaratildi
  */
-CategoryItemRoute.post("/create_item", Create);
+CategoryItemRoute.post("/create_item",Create);
 
 /**
  * @swagger

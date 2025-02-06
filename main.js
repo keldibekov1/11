@@ -1,7 +1,7 @@
 // http://localhost:3005/docs
 import express from "express";
 import dotenv from "dotenv";
-import brandRoute from "./routes/brands.routes.js"
+import BrandsRoute from "./routes/brands.routes.js"
 import CategoryitemRoute from "./routes/category.item.routes.js"; 
 import CategoryRoute from "./routes/category.routes.js"; 
 import router from "./routes/order.routes.js";
@@ -20,13 +20,15 @@ app.use(express.json());
 swaggerDocs(app);
 
 app.use("/", mainRoute)
-app.use("/barand", brandRoute)
-app.use("/categoryitem", CategoryitemRoute)
-app.use("/category", CategoryRoute);
-app.use("/order-items", orderItemRoutes)
-app.use("/product", productRoute);
-app.use("/users", userRoute);
-app.use("/order",router)
+app.use("/api", BrandsRoute);
+
+app.use("/api", CategoryitemRoute)
+app.use("/api", CategoryRoute);
+app.use("/api", orderItemRoutes)
+app.use("/api", productRoute);
+app.use("/api", userRoute);
+app.use("/api",router)
 app.use("/api", CategoryRoute)
 
 app.listen(port, () => console.log("server started on port", port));
+

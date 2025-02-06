@@ -7,7 +7,7 @@ let CategoryRoute = Router();
 
 /**
  * @swagger
- * /category/all:
+ * /api/category/all:
  *   get:
  *     summary: Barcha kategoriyalarni olish
  *     responses:
@@ -48,11 +48,11 @@ CategoryRoute.get("/category/:id", FindOne);
  *       201:
  *         description: Yangi kategoriya yaratildi
  */
-CategoryRoute.post("/category/:id", Create);
+CategoryRoute.post("/category", Create);
 
 /**
  * @swagger
- * /category/{id}:
+ * /api/category/{id}:
  *   patch:
  *     summary: Kategoriya ma'lumotlarini yangilash
  *     parameters:
