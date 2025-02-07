@@ -34,7 +34,7 @@ async function Create(req, res) {
         let { name_uz, name_ru, image } = req.body;
 
         if (!name_uz || !name_ru || !image) {
-            return res.status(400).json({ message: "Barcha maydonlarni to‘ldiring" });
+            return res.status(400).json({ message: "Barcha maydonlarni toldiring" });
         }
 
         await db.query(
@@ -55,7 +55,7 @@ async function Update(req, res) {
         let { name_uz, name_ru, image } = req.body;
 
         if (!name_uz || !name_ru || !image) {
-            return res.status(400).json({ message: "Barcha maydonlarni to‘ldiring" });
+            return res.status(400).json({ message: "Barcha maydonlarni toldiring" });
         }
 
         const [result] = await db.query(
@@ -84,7 +84,7 @@ async function Delete(req, res) {
             return res.status(404).json({ message: "Kategoriya topilmadi" });
         }
 
-        res.json({ message: "Kategoriya o‘chirildi" });
+        res.json({ message: "Kategoriya ochirildi" });
     } catch (error) {
         console.log(error.message);
         res.status(500).json({ message: error.message });

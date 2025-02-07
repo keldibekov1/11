@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 import Joi from "joi";
 import dotenv from "dotenv";
 
-dotenv.config(); // .env faylni o‘qish
+dotenv.config(); 
 
 const registerSchema = Joi.object({
   phone: Joi.string().pattern(/^[0-9]{9,15}$/).required(),
@@ -58,12 +58,12 @@ async function login(req, res) {
     let [user] = await db.query("SELECT * FROM users WHERE phone = ?", [phone]);
 
     if (!user.length) {
-      return res.status(401).send({ message: "Noto‘g‘ri telefon raqam yoki parol" });
+      return res.status(401).send({ message: "Notogri telefon raqam yoki parol" });
     }
 
     let correct = bcrypt.compareSync(password, user[0].password);
     if (!correct) {
-      return res.status(400).send({ message: "Noto‘g‘ri parol" });
+      return res.status(400).send({ message: "Notogri parol" });
     }
 
     let token = jwt.sign(
