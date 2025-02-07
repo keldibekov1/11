@@ -1,4 +1,4 @@
--- Active: 1737614480791@@127.0.0.1@3306@world
+-- Active: 1737614382066@@127.0.0.1@3306@world
 CREATE DATABASE world;
 
 use world;
@@ -11,6 +11,7 @@ CREATE Table users(
     role VARCHAR(55)
 );
 
+SELECT * FROM users;
 
 CREATE Table category (
     id INT AUTO_INCREMENT PRIMARY KEY,

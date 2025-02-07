@@ -63,6 +63,22 @@ export const getProductById = async (req, res) => {
   }
 };
 
+export const getProductPage =  async (req, res) => {
+
+  const page = parseInt(req.query.page) || 1;  
+  const limit = parseInt(req.query.limit) || 50;
+  const offset = (page - 1) * limit;
+
+  const [rows] = await db.execute('SELECT * FROM product LIMIT ? OFFSET ?', [limit, offset]);
+  res.json(rows);
+};
+
+export const getProductName =  async (req, res) => {
+  const search = req.query.q || '';
+  const [rows] = await db.execute('SELECT * FROM product WHERE MATCH(name) AGAINST(?)', [search]);
+  res.json(rows);
+};
+
 export const updateProduct = async (req, res) => {
   const { id } = req.params;
   const { price, available } = req.body;

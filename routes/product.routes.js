@@ -12,7 +12,6 @@ import passedRole from "../middleware/rolePolice.js";
 import selfPolice from "../middleware/selfPolice.js";
 import verifyToken from "../middleware/verifyToken.js";
 
-
 const router = Router();
 
 /**
@@ -79,6 +78,7 @@ router.get("/:id", getProductById);
  *       404:
  *         description: Product not found
  */
+
 router.patch("/:id",selfPolice,passedRole,verifyToken, updateProduct);
 
 /**

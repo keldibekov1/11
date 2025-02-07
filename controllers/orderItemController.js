@@ -5,7 +5,7 @@ export const createOrderItem= async (req, res) => {
   const { product_id, order_id, count, total } = req.body;
   const query =
     "INSERT INTO orderItem (product_id, order_id, count, total) VALUES (?, ?, ?, ?)";
-
+    
   try {
     const [result] = await db.execute(query, [
       product_id,

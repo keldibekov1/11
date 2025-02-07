@@ -78,4 +78,15 @@ async function login(req, res) {
   }
 }
 
-export { register, login };
+async function AllUsers(req, res) {
+  try {
+    const [users] = await db.query('SELECT * FROM users');
+    res.json(users);
+
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({ message: 'Serverda xatolik yuz berdi' });
+  }
+}
+
+export { register, login, AllUsers };

@@ -11,6 +11,7 @@ async function FindAll(req, res) {
 }
 
 async function FindOne(req, res) {
+
     try {
         let { id } = req.params;
         const [findItem] = await db.query(
