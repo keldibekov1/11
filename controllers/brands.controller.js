@@ -64,4 +64,6 @@ async function Delete(req, res) {
     }
 }
 
+
+
 export { FindAll, FindOne, Create, Update, Delete };

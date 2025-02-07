@@ -10,7 +10,7 @@ const userRoute = Router();
 
 /**
  * @swagger
- * /api/users/register:
+ * /api/register:
  *   post:
  *     summary: "Foydalanuvchini ro‘yxatdan o‘tkazish"
  *     tags:
@@ -22,7 +22,7 @@ const userRoute = Router();
  *           schema:
  *             type: object
  *             properties:
- *               name:
+ *               fullname:
  *                 type: string
  *               phone:
  *                 type: string
@@ -41,7 +41,7 @@ userRoute.post("/register", register);
 
 /**
  * @swagger
- * /api/users/login:
+ * /api/login:
  *   post:
  *     summary: "Foydalanuvchini tizimga kiritish"
  *     tags:

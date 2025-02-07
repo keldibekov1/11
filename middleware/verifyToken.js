@@ -1,19 +1,19 @@
-async function verifyToken(req, res, next) {
-  let header = req.header("Authorization")?.split(" "); 
+import jwt from "jsonwebtoken";
 
-  if (!header || header.length !== 2) {
-    return res.status(403).send({ message: "Not found token" });
-  }
+const verifyToken = (req, res, next) => {
+    const token = req.header("Authorization");
 
-  let [_, token] = header;
+    if (!token) {
+        return res.status(401).json({ message: "Token topilmadi, iltimos, tizimga kiring!" });
+    }
 
-  try {
-    let result = jwt.verify(token, "secretKey");
-    req.user = result; 
-    next(); 
-  } catch (error) {
-    return res.status(401).send({ message: "Invalid token" });
-  }
-}
+    try {
+        const verified = jwt.verify(token.replace("Bearer ", ""), process.env.JWT_SECRET);
+        req.user = verified; // Tokenni dekod qilib, req.user ichiga joylaymiz
+        next();
+    } catch (error) {
+        res.status(403).json({ message: "Noto‘g‘ri yoki eskirgan token!" });
+    }
+};
 
 export default verifyToken;

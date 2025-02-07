@@ -1,8 +1,10 @@
-// user.controller.js
 import db from "../config/db.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import Joi from "joi";
+import dotenv from "dotenv";
+
+dotenv.config(); // .env faylni o‘qish
 
 const registerSchema = Joi.object({
   phone: Joi.string().pattern(/^[0-9]{9,15}$/).required(),
@@ -24,19 +26,19 @@ async function register(req, res) {
     }
 
     let { phone, password, fullname, role } = req.body;
-    let [user] = await db.query("select * from users where phone = ?", [phone]);
+    let [user] = await db.query("SELECT * FROM users WHERE phone = ?", [phone]);
 
     if (user.length) {
-      return res.status(409).send({ message: "You have an account" });
+      return res.status(409).send({ message: "Bu raqam bilan ro‘yxatdan o‘tilgan" });
     }
 
     let hashed = bcrypt.hashSync(password, 10);
     let [data] = await db.query(
-      "insert into users (fullname, phone, password, role) values (?, ?, ?, ?)",
+      "INSERT INTO users (fullname, phone, password, role) VALUES (?, ?, ?, ?)",
       [fullname, phone, hashed, role]
     );
 
-    let [newUser] = await db.query("select * from users where id = ?", [
+    let [newUser] = await db.query("SELECT * FROM users WHERE id = ?", [
       data.insertId,
     ]);
     res.status(201).send({ data: newUser[0] });
@@ -53,15 +55,15 @@ async function login(req, res) {
     }
 
     let { phone, password } = req.body;
-    let [user] = await db.query("select * from users where phone = ?", [phone]);
+    let [user] = await db.query("SELECT * FROM users WHERE phone = ?", [phone]);
 
     if (!user.length) {
-      return res.status(401).send({ message: "Not authorized" });
+      return res.status(401).send({ message: "Noto‘g‘ri telefon raqam yoki parol" });
     }
 
     let correct = bcrypt.compareSync(password, user[0].password);
     if (!correct) {
-      return res.status(400).send({ message: "Wrong password" });
+      return res.status(400).send({ message: "Noto‘g‘ri parol" });
     }
 
     let token = jwt.sign(
@@ -69,7 +71,8 @@ async function login(req, res) {
         id: user[0].id,
         role: user[0].role,
       },
-      `secretKey`
+      process.env.KEY, // Tokenni xavfsiz generatsiya qilish
+      { expiresIn: "1d" } // Token 1 kun davomida amal qiladi
     );
 
     res.status(200).send({ token });
@@ -80,12 +83,11 @@ async function login(req, res) {
 
 async function AllUsers(req, res) {
   try {
-    const [users] = await db.query('SELECT * FROM users');
+    const [users] = await db.query("SELECT * FROM users");
     res.json(users);
-
   } catch (error) {
     console.log(error.message);
-    res.status(500).json({ message: 'Serverda xatolik yuz berdi' });
+    res.status(500).json({ message: "Serverda xatolik yuz berdi" });
   }
 }
 

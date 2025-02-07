@@ -4,84 +4,135 @@ import { Create, Delete, FindAll, FindOne, Update } from "../controllers/categor
 import swaggerJsDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 
-import passedRole from "../middleware/rolePolice.js";
-import selfPolice from "../middleware/selfPolice.js";
 import verifyToken from "../middleware/verifyToken.js";
 
-
-let CategoryItemRoute = Router();
+const CategoryItemRoute = Router();
 
 /**
  * @swagger
- * /api/category_item/all:
+ * tags:
+ *   name: CategoryItem
+ *   description: Kategoriya va mahsulot bog‘lanishini boshqarish
+ */
+
+/**
+ * @swagger
+ * /api/category-items:
  *   get:
- *     summary: Barcha kategoriya elementlarini olish
+ *     summary: Barcha kategoriya-mahsulot bog‘lanmalarini olish
+ *     tags: [CategoryItem]
  *     responses:
  *       200:
- *         description: Kategoriya elementlari ro'yxati
+ *         description: Ro‘yxat qaytarildi
  */
-CategoryItemRoute.get("/category_item/all", FindAll);
+CategoryItemRoute.get("/category-items", FindAll);
 
 /**
  * @swagger
- * /api/category_item/{id}:
+ * /api/category-items/{id}:
  *   get:
- *     summary: Bitta kategoriya elementini olish
+ *     summary: ID bo‘yicha bitta bog‘lanmani olish
+ *     tags: [CategoryItem]
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         schema:
- *           type: string
+ *           type: integer
  *     responses:
  *       200:
- *         description: Kategoriya elementi ma'lumotlari
+ *         description: Bog‘lanma ma’lumotlari
+ *       404:
+ *         description: Topilmadi
  */
-CategoryItemRoute.get("/category_item/:id", FindOne);
+CategoryItemRoute.get("/category-items/:id", FindOne);
 
 /**
  * @swagger
- * /api/create_item:
+ * /api/category-items:
  *   post:
- *     summary: Yangi kategoriya elementi yaratish
+ *     summary: Yangi kategoriya-mahsulot bog‘lanishini yaratish
+ *     tags: [CategoryItem]
+ *     security:
+ *       - BearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               category_id:
+ *                 type: integer
+ *                 example: 1
+ *               product_id:
+ *                 type: integer
+ *                 example: 5
  *     responses:
  *       201:
- *         description: Yangi kategoriya elementi yaratildi
+ *         description: Yaratildi
+ *       400:
+ *         description: Noto‘g‘ri so‘rov
  */
-CategoryItemRoute.post("/create_item",selfPolice,passedRole,verifyToken,Create);
+CategoryItemRoute.post("/category-items", verifyToken, Create);
 
 /**
  * @swagger
- * /api/category_item/{id}:
+ * /api/category-items/{id}:
  *   patch:
- *     summary: Kategoriya elementi ma'lumotlarini yangilash
+ *     summary: Bog‘lanmani yangilash
+ *     tags: [CategoryItem]
+ *     security:
+ *       - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         schema:
- *           type: string
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               category_id:
+ *                 type: integer
+ *                 example: 2
+ *               product_id:
+ *                 type: integer
+ *                 example: 7
  *     responses:
  *       200:
- *         description: Kategoriya elementi yangilandi
+ *         description: Yangilandi
+ *       400:
+ *         description: Noto‘g‘ri so‘rov
+ *       404:
+ *         description: Topilmadi
  */
-CategoryItemRoute.patch("/category_item/:id",selfPolice,passedRole,verifyToken, Update);
+CategoryItemRoute.patch("/category-items/:id", verifyToken, Update);
 
 /**
  * @swagger
- * /api/category_item/{id}:
+ * /api/category-items/{id}:
  *   delete:
- *     summary: Kategoriya elementini o'chirish
+ *     summary: Bog‘lanmani o‘chirish
+ *     tags: [CategoryItem]
+ *     security:
+ *       - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         schema:
- *           type: string
+ *           type: integer
  *     responses:
  *       200:
- *         description: Kategoriya elementi o'chirildi
+ *         description: O‘chirildi
+ *       404:
+ *         description: Topilmadi
  */
-CategoryItemRoute.delete("/category_item/:id",selfPolice,passedRole,verifyToken, Delete);
+CategoryItemRoute.delete("/category-items/:id", verifyToken, Delete);
 
 export default CategoryItemRoute;

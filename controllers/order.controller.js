@@ -1,17 +1,37 @@
-import db from "../config/db.js"; // Database ulanishi
+import db from "../config/db.js"; // ✅ To'g'ri import
 
-// Buyurtma yaratish
 export const createOrder = async (req, res) => {
-  const { user_id, total_price } = req.body;
-  const query = "INSERT INTO `order` (user_id, total_price) VALUES (?, ?)";
+    const { user_id, total_price, products } = req.body;
 
-  try {
-    const [result] = await db.execute(query, [user_id, total_price]);
-    res.status(201).json(result);
-  } catch (error) {
-    res.status(500).json({ message: "Buyurtma yaratishda xato", error });
-  }
+    if (!products.length) {
+        return res.status(400).json({ message: "Mahsulotlar bo‘sh bo‘lishi mumkin emas." });
+    }
+
+    try {
+        // ✅ Asosiy buyurtmani yaratish
+        const [created] = await db.query(
+            "INSERT INTO orders (user_id, total_price) VALUES (?, ?)",
+            [user_id, total_price]
+        );
+
+        // ✅ Buyurtma ID sini olish
+        const orderId = created.insertId;
+
+        // ✅ OrderItems qo‘shish
+        for (let prd of products) {
+            await db.query(
+                "INSERT INTO orderItems (orderId, productId, quantity, totalSum) VALUES (?, ?, ?, ?)",
+                [orderId, prd.productId, prd.quantity, prd.totalSum]
+            );
+        }
+
+        res.status(201).json({ message: "Buyurtma yaratildi", orderId });
+
+    } catch (error) {
+        res.status(500).json({ message: "Buyurtmani yaratishda xato", error });
+    }
 };
+
 
 // Barcha buyurtmalarni olish
 export const getAllOrders = async (req, res) => {

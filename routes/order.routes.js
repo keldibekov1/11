@@ -1,97 +1,155 @@
-import express from "express";
-import { createOrder, getAllOrders, getOrderById, updateOrder, deleteOrder } from '../controllers/order.controller.js';
-import passedRole from "../middleware/rolePolice.js";
-import selfPolice from "../middleware/selfPolice.js";
+import { Router } from "express";
+import {
+    createOrder,
+    getAllOrders,
+    getOrderById,
+    updateOrder,
+    deleteOrder
+} from "../controllers/order.controller.js";
 import verifyToken from "../middleware/verifyToken.js";
 
+const OrderRoute = Router();
 
-const router = express.Router();
+/**
+ * @swagger
+ * tags:
+ *   name: Orders
+ *   description: Buyurtmalarni boshqarish
+ */
+
+/**
+ * @swagger
+ * /api/orders:
+ *   get:
+ *     summary: Barcha buyurtmalarni olish
+ *     tags: [Orders]
+ *     security:
+ *       - BearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Buyurtmalar ro‘yxati qaytarildi
+ */
+OrderRoute.get("/orders", verifyToken, getAllOrders);
+
+/**
+ * @swagger
+ * /api/orders/{id}:
+ *   get:
+ *     summary: ID bo‘yicha bitta buyurtmani olish
+ *     tags: [Orders]
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Buyurtma topildi
+ *       404:
+ *         description: Buyurtma topilmadi
+ */
+OrderRoute.get("/orders/:id", verifyToken, getOrderById);
 
 /**
  * @swagger
  * /api/orders:
  *   post:
- *     summary: Create a new order
- *     description: Create a new order in the system.
+ *     summary: Yangi buyurtma yaratish
+ *     tags: [Orders]
+ *     security:
+ *       - BearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               user_id:
+ *                 type: integer
+ *                 example: 1
+ *               total_price:
+ *                 type: number
+ *                 example: 500000
+ *               products:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     productId:
+ *                       type: integer
+ *                       example: 2
+ *                     quantity:
+ *                       type: integer
+ *                       example: 1
+ *                     totalSum:
+ *                       type: number
+ *                       example: 250000
  *     responses:
  *       201:
- *         description: Order created successfully
+ *         description: Yangi buyurtma yaratildi
+ *       400:
+ *         description: Noto‘g‘ri so‘rov
  */
-router.post("/",selfPolice,passedRole,verifyToken, createOrder);
-
-/**
- * @swagger
- * /api/orders:
- *   get:
- *     summary: Get all orders
- *     description: Retrieve all orders in the system.
- *     responses:
- *       200:
- *         description: List of all orders
- */
-router.get("/", getAllOrders);
-
-/**
- * @swagger
- * /api/orders/{id}:
- *   get:
- *     summary: Get an order by ID
- *     description: Retrieve a specific order by its ID.
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         description: Order ID
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Order found
- *       404:
- *         description: Order not found
- */
-router.get("/:id", getOrderById);
+OrderRoute.post("/orders", verifyToken, createOrder);
 
 /**
  * @swagger
  * /api/orders/{id}:
  *   patch:
- *     summary: Update an order
- *     description: Update the details of an existing order.
+ *     summary: Buyurtmani yangilash
+ *     tags: [Orders]
+ *     security:
+ *       - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
- *         description: Order ID
  *         schema:
- *           type: string
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               total_price:
+ *                 type: number
+ *                 example: 550000
  *     responses:
  *       200:
- *         description: Order updated successfully
+ *         description: Buyurtma yangilandi
+ *       400:
+ *         description: Noto‘g‘ri so‘rov
  *       404:
- *         description: Order not found
+ *         description: Buyurtma topilmadi
  */
-router.patch("/:id",selfPolice,passedRole,verifyToken, updateOrder);
+OrderRoute.patch("/orders/:id", verifyToken, updateOrder);
 
 /**
  * @swagger
  * /api/orders/{id}:
  *   delete:
- *     summary: Delete an order
- *     description: Delete an order from the system.
+ *     summary: Buyurtmani o‘chirish
+ *     tags: [Orders]
+ *     security:
+ *       - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
- *         description: Order ID
  *         schema:
- *           type: string
+ *           type: integer
  *     responses:
  *       200:
- *         description: Order deleted successfully
+ *         description: Buyurtma o‘chirildi
  *       404:
- *         description: Order not found
+ *         description: Buyurtma topilmadi
  */
-router.delete("/:id",selfPolice,passedRole,verifyToken, deleteOrder);
+OrderRoute.delete("/orders/:id", verifyToken, deleteOrder);
 
-export default router;
+export default OrderRoute;

@@ -1,40 +1,24 @@
-import { Router } from "express";
-import multer from "../middleware/upload.js"; // Multer middleware'ni import qilamiz
+import express from "express";
 import {
   createProduct,
   getAllProducts,
   getProductById,
+  getProductPage,
+  getProductName,
   updateProduct,
   deleteProduct,
 } from "../controllers/product.controller.js";
 
-import passedRole from "../middleware/rolePolice.js";
-import selfPolice from "../middleware/selfPolice.js";
-import verifyToken from "../middleware/verifyToken.js";
-
-const router = Router();
-
-/**
- * @swagger
- * /api/products:
- *   post:
- *     summary: Create a new product
- *     description: Add a new product with an image to the catalog.
- *     responses:
- *       201:
- *         description: Product created successfully
- */
-router.post("/",selfPolice,passedRole,verifyToken, multer.single("image"), createProduct); // "image" nomli faylni yuklaymiz
+const router = express.Router();
 
 /**
  * @swagger
  * /api/products:
  *   get:
- *     summary: Get all products
- *     description: Retrieve all products in the catalog.
+ *     summary: Barcha mahsulotlarni olish
  *     responses:
  *       200:
- *         description: List of all products
+ *         description: Mahsulotlar ro‘yxati
  */
 router.get("/", getAllProducts);
 
@@ -42,64 +26,89 @@ router.get("/", getAllProducts);
  * @swagger
  * /api/products/{id}:
  *   get:
- *     summary: Get a product by ID
- *     description: Retrieve a specific product by its ID.
+ *     summary: ID bo‘yicha mahsulot olish
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
- *         description: Product ID
  *         schema:
- *           type: string
+ *           type: integer
  *     responses:
  *       200:
- *         description: Product found
- *       404:
- *         description: Product not found
+ *         description: Mahsulot ma’lumotlari
  */
 router.get("/:id", getProductById);
 
 /**
  * @swagger
- * /api/products/{id}:
- *   patch:
- *     summary: Update a product
- *     description: Update the details of a specific product.
+ * /api/products/page:
+ *   get:
+ *     summary: Sahifalangan mahsulotlar ro‘yxati
+ *     responses:
+ *       200:
+ *         description: Sahifalangan mahsulotlar
+ */
+router.get("/page", getProductPage);
+
+/**
+ * @swagger
+ * /api/products/search:
+ *   get:
+ *     summary: Nomi bo‘yicha mahsulot qidirish
  *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         description: Product ID
+ *       - in: query
+ *         name: q
  *         schema:
  *           type: string
  *     responses:
  *       200:
- *         description: Product updated successfully
- *       404:
- *         description: Product not found
+ *         description: Qidiruv natijalari
  */
+router.get("/search", getProductName);
 
-router.patch("/:id",selfPolice,passedRole,verifyToken, updateProduct);
+/**
+ * @swagger
+ * /api/products:
+ *   post:
+ *     summary: Yangi mahsulot yaratish
+ *     responses:
+ *       201:
+ *         description: Mahsulot yaratildi
+ */
+router.post("/", createProduct);
+
+/**
+ * @swagger
+ * /api/products/{id}:
+ *   put:
+ *     summary: Mahsulotni yangilash
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Mahsulot yangilandi
+ */
+router.put("/:id", updateProduct);
 
 /**
  * @swagger
  * /api/products/{id}:
  *   delete:
- *     summary: Delete a product
- *     description: Delete a specific product from the catalog.
+ *     summary: Mahsulotni o‘chirish
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
- *         description: Product ID
  *         schema:
- *           type: string
+ *           type: integer
  *     responses:
  *       200:
- *         description: Product deleted successfully
- *       404:
- *         description: Product not found
+ *         description: Mahsulot o‘chirildi
  */
-router.delete("/:id",selfPolice,passedRole,verifyToken, deleteProduct);
+router.delete("/:id", deleteProduct);
 
 export default router;
